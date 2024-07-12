@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<head>
+    <title>Data Retrieved from thingspeak</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+    <h1>ThingSpeak Data</h1>
+    <div id="data-container">
+        <p>Entry ID : <p id="entryID_vol"></p> Voltage : <p id="latestData_vol"></p></p>
+        <hr />
+        <p>Entry ID : <p id="entryID_cur"></p> Current : <p id="latestData_cur"></p></p>
+        <hr />
+        <p>Entry ID : <p id="entryID_pow"></p> Power : <p id="latestData_pow"></p></p>
+        <hr />
+    </div>
+
+    <script>
+        const apiKey = 'UE2SNYMB2ZIFNI6F';
+        const channelID = '2160288';
+        //const field = 1; // Field1 index
+        const url1 = `https://api.thingspeak.com/channels/${channelID}/fields/1.json?api_key=${apiKey}`;
+        const url2 = `https://api.thingspeak.com/channels/${channelID}/fields/2.json?api_key=${apiKey}`;
+        const url3 = `https://api.thingspeak.com/channels/${channelID}/fields/3.json?api_key=${apiKey}`;
+
+        setInterval(function() {   
+        //Voltage
+        fetch(url1)
+        .then(response => response.json())
+        .then(data => {
+        // Process the retrieved data
+        $.get(url1, function (data) {
+        var entries = data.feeds;
+        // Iterate over the entries and display the field values
+        var latestData_vol = 0;
+        var entryID_vol = 0;
+        
+        
+        for (var i = 0; i < entries.length; i++) {
+          var entry = entries[i];
+          var fieldValue = entry.field1;
+          if (fieldValue !== null && !isNaN(fieldValue)) {
+            latestData_vol = fieldValue;
+            entryID_vol = entry.entry_id;
+          }
+          }
+        // Append the values to the data container
+        //$('#data-container').append('<p>Entry_Id:'+entryID_vol+'</p>'+'<p>Voltage: ' + latestData_vol + '</p>');
+       // $('#data-container').append('<hr>');
+       $('#entryID_vol').text(entryID_vol);
+       $('#latestData_vol').text(latestData_vol);
+        
+        
+      });
+        })
+        .catch(error => {
+        console.error('Error:', error);
+        });
+
+
+        //Current
+        fetch(url2)
+        .then(response => response.json())
+        .then(data => {
+        // Process the retrieved data
+        $.get(url2, function (data) {
+        var entries = data.feeds;
+        // Iterate over the entries and display the field values
+        
+        var latestData_cur = 0;
+        var entryID_cur = 0;
+        
+        for (var i = 0; i < entries.length; i++) {
+          var entry = entries[i];
+          var fieldValue = entry.field2;
+          if (fieldValue !== null && !isNaN(fieldValue)) {
+            latestData_cur = fieldValue;
+            entryID_cur = entry.entry_id;
+          }
+          }
+        // Append the values to the data container
+        
+        //$('#data-container').append('<p>Entry_Id:'+entryID_cur+'</p>'+'<p>Current ' + latestData_cur + '</p>');
+        //$('#data-container').append('<hr>');
+        $('#entryID_cur').text(entryID_cur);
+       $('#latestData_cur').text(latestData_cur);
+        
+      });
+        })
+        .catch(error => {
+        console.error('Error:', error);
+        });
+
+
+        //Power
+        fetch(url3)
+        .then(response => response.json())
+        .then(data => {
+        // Process the retrieved data
+        $.get(url3, function (data) {
+        var entries = data.feeds;
+        // Iterate over the entries and display the field values
+        
+        var latestData_pow = 0;
+        var entryID_pow = 0;
+        
+        for (var i = 0; i < entries.length; i++) {
+          var entry = entries[i];
+          var fieldValue = entry.field3;
+          if (fieldValue !== null && !isNaN(fieldValue)) {
+            latestData_pow = fieldValue;
+            entryID_pow = entry.entry_id;
+          }
+          }
+        // Append the values to the data container
+         
+        //$('#data-container').append('<p>Entry_Id:'+entryID_pow+'</p>'+'<p>Power: ' + latestData_pow + '</p>');
+        //$('#data-container').append('<hr>');
+        $('#entryID_pow').text(entryID_pow);
+       $('#latestData_pow').text(latestData_pow);
+        
+      });
+        })
+        .catch(error => {
+        console.error('Error:', error);
+        });
+    }, 1000);
+    
+    </script>
+
+</body>
+</html>
